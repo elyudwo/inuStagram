@@ -1,0 +1,20 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: AKIAUYKUIQPLDU4V6RUF
+      secret-key: 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
+    s3:
+      bucket: study-hub-bucket
+
+jwt:
+  secret: Nana
