@@ -1,7 +1,9 @@
 spring:
   data:
     redis:
-      host: localhost
+#      host: localhost
+#      port: 6379
+      host: studyhub-redis-cluster.4oxtwa.clustercfg.apn2.cache.amazonaws.com
       port: 6379
 
 cloud:
@@ -11,10 +13,10 @@ cloud:
     region:
       static: ap-northeast-2
     credentials:
-      access-key: AKIAUYKUIQPLDU4V6RUF
-      secret-key: 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
+      access-key: AKIAQ3EGPYGBCDENDNZG
+      secret-key: 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
     s3:
-      bucket: study-hub-bucket
+      bucket: studyhub-bucket
 
 jwt:
   secret: Nana

@@ -3,7 +3,7 @@ package io.kr.inu.core;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {})
+@SpringBootApplication(scanBasePackages = {"io.kr.inu.core", "io.kr.inu.infra"})
 public class CoreApplication {
 
     public static void main(String[] args) {
