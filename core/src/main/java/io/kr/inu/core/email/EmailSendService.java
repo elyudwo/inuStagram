@@ -1,7 +1,9 @@
 package io.kr.inu.core.email;
 
+import io.kr.inu.core.email.dto.CertificationResponse;
 import io.kr.inu.core.email.dto.MailInfo;
 import io.kr.inu.core.email.dto.QuestionData;
+import io.kr.inu.infra.jwt.JwtProvider;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class EmailSendService {
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;
     private final EmailCacheService emailCacheService;
+    private final JwtProvider jwtProvider;
 
     @Value("${spring.mail.username}")
     private String emailAddress;
@@ -38,12 +41,16 @@ public class EmailSendService {
         message.setText(authCode, "utf-8", "html");
     }
 
-    public String sendEmail(MailInfo info) throws MessagingException {
+    public CertificationResponse sendEmail(MailInfo info) throws MessagingException {
         String toEmail = info.getEmail();
         String authCode = emailCacheService.getAndCacheAuthCode(toEmail);
         MimeMessage emailForm = createEmailForm(toEmail, authCode);
         emailSender.send(emailForm);
-        return authCode;
+
+        return CertificationResponse.builder()
+                .certificateNumber(authCode)
+                .token(jwtProvider.createJwtResponseDto(info.getEmail()))
+                .build();
     }
 
     public String setContext(String code) {

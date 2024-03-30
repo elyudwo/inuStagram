@@ -1,6 +1,8 @@
 package io.kr.inu.core.video.service;
 
-import io.kr.inu.infra.s3.ImageRepository;
+import io.kr.inu.core.video.domain.VideoEntity;
+import io.kr.inu.core.video.repository.VideoRepository;
+import io.kr.inu.infra.s3.VideoS3Repository;
 import io.kr.inu.infra.s3.MultipartDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,15 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class VideoService {
 
-    private final ImageRepository imageRepository;
+    private final VideoS3Repository videoS3Repository;
+    private final VideoRepository videoRepository;
 
     @Transactional
-    public void uploadVideo(MultipartFile video, Long userId) throws IOException {
+    public String uploadVideo(MultipartFile video, String email) throws IOException {
         MultipartDto multipartDto = new MultipartDto(video.getName(), video.getSize(), video.getContentType(), video.getInputStream());
-        imageRepository.saveVideo(multipartDto);
+        String videoUrl = videoS3Repository.saveVideo(multipartDto);
+        videoRepository.save(VideoEntity.of(email, videoUrl));
 
+        return videoUrl;
     }
 }

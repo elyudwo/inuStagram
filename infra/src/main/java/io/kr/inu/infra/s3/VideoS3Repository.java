@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ImageRepository {
+public class VideoS3Repository {
 
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.s3.bucket}")

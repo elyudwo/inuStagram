@@ -20,21 +20,21 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType() == UserId.class;
+        return parameter.getParameterType() == UserEmail.class;
     }
 
     @Override
-    public UserId resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public UserEmail resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                     NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         try {
             String jwtToken = webRequest.getHeader("Authorization");
             System.out.println("토큰입니다 : " + jwtToken);
             if (jwtToken == null) {
-                return new UserId(null);
+                return new UserEmail(null);
             }
             jwtToken = jwtToken.replace("Bearer ", "");
-            Long id = (JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("id")).asLong();
-            return new UserId(id);
+            String email = (JWT.require(Algorithm.HMAC512(SECRET)).build().verify(jwtToken).getClaim("email")).asString();
+            return new UserEmail(email);
         } catch (Exception e) {
             return null;
         }

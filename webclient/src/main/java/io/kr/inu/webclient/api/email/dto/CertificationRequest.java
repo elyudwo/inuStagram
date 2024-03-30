@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class MailSendRequest {
+public class CertificationRequest {
 
-    @Schema(description = "이메일 주소", example = "kdw990202@inu.ac.kr")
+    @Schema(description = "이메일 주소", example = "201801686@inu.ac.kr")
     @NotBlank
     @NormalEmail
     private String email;

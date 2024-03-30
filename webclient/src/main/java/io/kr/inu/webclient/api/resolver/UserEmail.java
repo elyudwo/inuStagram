@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserId {
+public class UserEmail {
 
-    private Long id;
+    private final String email;
 
 }

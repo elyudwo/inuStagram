@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class JwtDto {
 
-    private String accessToken;
-    private String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 
     @Builder
     public JwtDto(String accessToken, String refreshToken) {
