@@ -16,7 +16,7 @@ public class VideoService {
     private final ImageRepository imageRepository;
 
     @Transactional
-    public void uploadVideo(MultipartFile video) throws IOException {
+    public void uploadVideo(MultipartFile video, Long userId) throws IOException {
         MultipartDto multipartDto = new MultipartDto(video.getName(), video.getSize(), video.getContentType(), video.getInputStream());
         imageRepository.saveVideo(multipartDto);
 
