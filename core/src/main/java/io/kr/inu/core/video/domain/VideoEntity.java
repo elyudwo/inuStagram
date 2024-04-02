@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class VideoEntity {
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,6 +20,7 @@ public class VideoEntity {
 
     private String videoUrl;
 
+    @Column(name = "video_like")
     private Long like;
 
     public static VideoEntity of(String email, String videoUrl) {
