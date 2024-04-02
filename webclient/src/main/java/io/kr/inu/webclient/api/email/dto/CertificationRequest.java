@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class CertificationRequest {
 
-    @Schema(description = "이메일 주소", example = "201801686@inu.ac.kr")
+    @Schema(description = "이메일 주소", example = "dudqk9696@naver.com")
     @NotBlank
     @NormalEmail
     private String email;

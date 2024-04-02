@@ -7,11 +7,9 @@ import lombok.Getter;
 public class JwtDto {
 
     private final String accessToken;
-    private final String refreshToken;
 
     @Builder
-    public JwtDto(String accessToken, String refreshToken) {
+    public JwtDto(String accessToken) {
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 }
