@@ -1,7 +1,8 @@
-package io.kr.inu.webclient.api.email;
+package io.kr.inu.webclient.api.token;
 
-import io.kr.inu.core.email.EmailSendService;
 import io.kr.inu.core.email.dto.CertificationResponse;
+import io.kr.inu.core.token.TokenService;
+import io.kr.inu.core.token.dto.TokenResponse;
 import io.kr.inu.webclient.api.email.dto.CertificationRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
@@ -16,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class EmailController {
+public class TokenController {
 
-    private final EmailSendService emailSendService;
+    private final TokenService tokenService;
 
-    @Operation(summary = "이메일 인증코드 전송 API", description = "바디에 {email} json 형식으로 보내주시면 됩니다. ")
-    @PostMapping("/v1/email")
-    public ResponseEntity<CertificationResponse> sendEmail(@Valid @RequestBody CertificationRequest request) throws MessagingException {
-        return ResponseEntity.ok(emailSendService.sendEmail(request.toMailInfo()));
+    @Operation(summary = "토큰 발급 API", description = "바디에 {email} json 형식으로 보내주시면 됩니다.")
+    @PostMapping("/v1/token/issue")
+    public ResponseEntity<TokenResponse> sendEmail(@Valid @RequestBody CertificationRequest request) {
+        return ResponseEntity.ok(tokenService.issueToken(request.toMailInfo()));
     }
-
 }

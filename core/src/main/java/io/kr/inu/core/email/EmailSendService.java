@@ -21,7 +21,6 @@ public class EmailSendService {
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;
     private final EmailCacheService emailCacheService;
-    private final JwtProvider jwtProvider;
 
     @Value("${spring.mail.username}")
     private String emailAddress;
@@ -49,7 +48,6 @@ public class EmailSendService {
 
         return CertificationResponse.builder()
                 .certificateNumber(authCode)
-                .token(jwtProvider.createJwtResponseDto(info.getEmail()))
                 .build();
     }
 

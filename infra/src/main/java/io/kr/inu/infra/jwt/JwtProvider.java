@@ -16,8 +16,6 @@ import java.util.Date;
 @Service
 public class JwtProvider {
 
-    private final RedisTemplate<Long, String> redisTemplate;
-
     @Value("Nana")
     private String SECRET;
 

@@ -8,12 +8,9 @@ import lombok.Getter;
 public class CertificationResponse {
 
     private final String certificateNumber;
-    private final JwtDto token;
-
 
     @Builder
-    public CertificationResponse(String certificateNumber, JwtDto token) {
+    public CertificationResponse(String certificateNumber) {
         this.certificateNumber = certificateNumber;
-        this.token = token;
     }
 }
