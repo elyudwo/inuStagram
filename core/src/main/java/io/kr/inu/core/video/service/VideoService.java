@@ -20,7 +20,7 @@ public class VideoService {
 
     @Transactional
     public String uploadVideo(MultipartFile video, String email) throws IOException {
-        MultipartDto multipartDto = new MultipartDto(video.getName(), video.getSize(), video.getContentType(), video.getInputStream());
+        MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
         videoRepository.save(VideoEntity.of(email, videoUrl));
 
