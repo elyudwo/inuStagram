@@ -1,5 +1,6 @@
 package io.kr.inu.core.video.domain;
 
+import io.kr.inu.core.common.BaseTimeEntity;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "video")
-public class VideoEntity {
+public class VideoEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
