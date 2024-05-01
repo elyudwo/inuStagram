@@ -9,6 +9,8 @@ import io.kr.inu.core.video.repository.VideoRepository;
 import io.kr.inu.infra.s3.VideoS3Repository;
 import io.kr.inu.infra.s3.MultipartDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -22,16 +24,21 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VideoService {
 
     private final VideoS3Repository videoS3Repository;
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
+    int cnt = 1;
 
     @Transactional
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
+        if(cnt == 1) {
+            throw new IllegalArgumentException("유해영상은 올릴 수 없어요");
+        }
 //        videoValidateService.validateHarmVideo(video);
 
         videoRepository.save(VideoEntity.of(videoUrl, videoReqDto));
@@ -51,9 +58,6 @@ public class VideoService {
     }
 
     private boolean isNext(long count, int page, int size) {
-        if((long) size * page + page < count) {
-            return true;
-        }
-        return false;
+        return (long) size * page + size < count;
     }
 }
