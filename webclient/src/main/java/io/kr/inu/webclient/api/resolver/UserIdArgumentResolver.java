@@ -32,7 +32,7 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
             String jwtToken = webRequest.getHeader("Authorization");
             log.info("토큰입니다 : " + jwtToken);
             if (jwtToken == null) {
-                log.info("야 토큰이 없대");
+                log.warn("야 토큰이 없대");
                 return new UserEmail("sample@inu.ac.kr");
             }
             jwtToken = jwtToken.replace("Bearer ", "");

@@ -28,7 +28,7 @@ public class JwtProvider {
     private String createAccessToken(String email) {
         String jwtToken = JWT.create()
                 .withSubject("accessToken")
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 24 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 24 * 1000 * 100))
                 .withClaim("email", email)
                 .sign(Algorithm.HMAC512(SECRET));
         return "Bearer " + jwtToken;
