@@ -27,7 +27,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                 .from(videoEntity)
                 .orderBy(videoEntity.createdDate.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1);
+                .limit(pageable.getPageSize());
 
         return data.fetch();
     }

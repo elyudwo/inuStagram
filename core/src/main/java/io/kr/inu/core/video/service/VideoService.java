@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,10 +41,19 @@ public class VideoService {
 
     public FindVideoResponseDto findVideoByDate(String email, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Slice<EachVideoData> posts = Converter.toSlice(pageable, videoRepository.findVideoByDate(pageable));
+        List<EachVideoData> posts = videoRepository.findVideoByDate(pageable);
+        boolean next = isNext(videoRepository.count(), page, size);;
 
         return FindVideoResponseDto.builder()
                 .allVideos(posts)
+                .next(next)
                 .build();
+    }
+
+    private boolean isNext(long count, int page, int size) {
+        if((long) size * page + page < count) {
+            return true;
+        }
+        return false;
     }
 }

@@ -4,13 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Slice;
 
+import java.util.List;
+
 @Getter
 public class FindVideoResponseDto {
 
-    Slice<EachVideoData> allVideos;
+    private final List<EachVideoData> allVideos;
+    private final boolean next;
 
     @Builder
-    public FindVideoResponseDto(Slice<EachVideoData> allVideos) {
+    public FindVideoResponseDto(List<EachVideoData> allVideos, boolean next) {
         this.allVideos = allVideos;
+        this.next = next;
     }
 }
