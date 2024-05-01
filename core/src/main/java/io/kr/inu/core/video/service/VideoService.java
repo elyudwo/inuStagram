@@ -32,6 +32,7 @@ public class VideoService {
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
 //        videoValidateService.validateHarmVideo(video);
+
         videoRepository.save(VideoEntity.of(videoUrl, videoReqDto));
 
         return videoUrl;

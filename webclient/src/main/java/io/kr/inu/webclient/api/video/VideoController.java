@@ -1,11 +1,11 @@
 package io.kr.inu.webclient.api.video;
 
+import io.kr.inu.core.video.dto.FindVideoResponseDto;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
 import io.kr.inu.core.video.service.VideoService;
 import io.kr.inu.webclient.api.resolver.UserEmail;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +23,15 @@ public class VideoController {
     @Operation(summary = "동영상 저장", description = "JWT를 헤더에 보내주세요. multipart로 보내주실때 key 값에 'video' 로 보내주세요")
     @PostMapping(value = "/v1/upload/video",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String uploadImage(UserEmail email, @RequestPart MultipartFile video, @RequestPart String title) throws IOException {
+    public String uploadVideo(UserEmail email, @RequestPart MultipartFile video, @RequestPart String title) throws IOException {
         MakeVideoReqDto videoReqDto = MakeVideoReqDto.of(title, email.getEmail());
 
         return videoService.uploadVideo(video, videoReqDto);
     }
 
-//    @GetMapping("/test")
-//    public void hi() {
-//        videoService.test();
-//    }
-
+    @Operation(summary = "동영상 최신순 조회 기능", description = "JWT를 헤더에 보내주세요. 조회하려는 페이지와 동영상 개수를 입력해주세요.")
+    @GetMapping(value = "/v1/find/video")
+    public ResponseEntity<FindVideoResponseDto> findVideoByDate(UserEmail email, @RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(videoService.findVideoByDate(email.getEmail(), page, size));
+    }
 }
