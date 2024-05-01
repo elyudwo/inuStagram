@@ -29,4 +29,8 @@ public class VideoService {
 
         return videoUrl;
     }
+
+//    public void test() {
+//        videoValidateService.validateHarmVideo();
+//    }
 }
