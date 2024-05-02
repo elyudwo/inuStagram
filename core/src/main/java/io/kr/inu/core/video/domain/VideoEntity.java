@@ -21,6 +21,7 @@ public class VideoEntity extends BaseTimeEntity {
 
     private String email;
 
+    @Column(length = 1000)
     private String videoUrl;
 
     private String title;

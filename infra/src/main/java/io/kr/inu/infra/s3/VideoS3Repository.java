@@ -18,8 +18,6 @@ public class VideoS3Repository {
     private static final String BASIC_PROFILE_IMAGE = "https://studyhub-s3.s3.ap-northeast-2.amazonaws.com/avatar_l%401x.png";
 
     public String saveVideo(MultipartDto multipartDto) {
-        if(multipartDto.getFileSize() >= 20 * 1024 * 1024) { throw new RuntimeException(); }
-
         String originalFilename = multipartDto.getOriginalFileName();
 
         ObjectMetadata metadata = new ObjectMetadata();
