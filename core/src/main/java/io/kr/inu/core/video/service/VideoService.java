@@ -30,16 +30,12 @@ public class VideoService {
     private final VideoS3Repository videoS3Repository;
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
-    int cnt = 1;
 
     @Transactional
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
-        if(cnt == 1) {
-            throw new IllegalArgumentException("유해영상은 올릴 수 없어요");
-        }
-//        videoValidateService.validateHarmVideo(video);
+        videoValidateService.validateHarmVideo(video);
 
         videoRepository.save(VideoEntity.of(videoUrl, videoReqDto));
 
