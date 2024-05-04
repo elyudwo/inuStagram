@@ -10,6 +10,10 @@ import io.kr.inu.infra.s3.VideoS3Repository;
 import io.kr.inu.infra.s3.MultipartDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegExecutor;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -35,11 +43,39 @@ public class VideoService {
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
-        videoValidateService.validateHarmVideo(video);
+//        videoValidateService.validateHarmVideo(video);
+        String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 
-        videoRepository.save(VideoEntity.of(videoUrl, videoReqDto));
+        videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
 
         return videoUrl;
+    }
+
+    private File extractThumbnail(MultipartFile videoFile) throws IOException {
+        log.info("extractThumbnail 시작");
+        FFmpeg ffMpeg = new FFmpeg("C:/ffmpeg/bin/ffmpeg.exe");
+        FFprobe ffProbe = new FFprobe("C:/ffmpeg/bin/ffprobe.exe");
+
+        File outputThumbnailFile = File.createTempFile("temp_", ".jpg");
+
+        Path tempFilePath = outputThumbnailFile.toPath();
+        Files.copy(videoFile.getInputStream(), tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+        File thumbnailOutputFile = File.createTempFile("thumbnail_", ".jpg");
+        thumbnailOutputFile.deleteOnExit();
+
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(outputThumbnailFile.toString())
+                .overrideOutputFiles(true)
+                .addOutput(thumbnailOutputFile.getAbsolutePath())
+                .setFrames(1)
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffMpeg, ffProbe);
+        executor.createJob(builder).run();
+
+        log.info("extractThumbnail 종료");
+        return thumbnailOutputFile;
     }
 
     public FindVideoResponseDto findVideoByDate(String email, int page, int size) {

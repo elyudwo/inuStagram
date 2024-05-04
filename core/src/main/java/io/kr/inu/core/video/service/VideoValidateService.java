@@ -44,7 +44,6 @@ public class VideoValidateService {
         formData.add("video", videoResource);
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(formData, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
         String responseData = restTemplate.postForObject(apiUrl, requestEntity, String.class);
 
         if(responseData != null && responseData.contains("true")) {
