@@ -24,6 +24,9 @@ public class VideoEntity extends BaseTimeEntity {
     @Column(length = 1000)
     private String videoUrl;
 
+    @Column(length = 1000)
+    private String thumbnailUrl;
+
     private String title;
 
     @Column(name = "video_like")
@@ -31,17 +34,19 @@ public class VideoEntity extends BaseTimeEntity {
 
 
     @Builder
-    public VideoEntity(String email, String videoUrl, String title, Long like) {
+    public VideoEntity(String email, String videoUrl, String thumbnailUrl, String title, Long like) {
         this.email = email;
         this.videoUrl = videoUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.title = title;
         this.like = like;
     }
 
-    public static VideoEntity of(String videoUrl, MakeVideoReqDto videoReqDto) {
+    public static VideoEntity of(String videoUrl, String thumbnailUrl, MakeVideoReqDto videoReqDto) {
         return VideoEntity.builder()
                 .email(videoReqDto.getEmail())
                 .videoUrl(videoUrl)
+                .thumbnailUrl(thumbnailUrl)
                 .title(videoReqDto.getTitle())
                 .like(0L)
                 .build();

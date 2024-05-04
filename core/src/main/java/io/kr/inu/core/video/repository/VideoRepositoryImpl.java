@@ -22,6 +22,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
         JPAQuery<EachVideoData> data =jpaQueryFactory
                 .select(Projections.constructor(EachVideoData.class,
                         videoEntity.videoUrl,
+                        videoEntity.thumbnailUrl,
                         videoEntity.title,
                         videoEntity.like))
                 .from(videoEntity)
