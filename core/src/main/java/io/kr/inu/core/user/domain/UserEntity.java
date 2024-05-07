@@ -17,6 +17,7 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(name = "email")
     private String email;
 
     private String color;
