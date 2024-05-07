@@ -24,7 +24,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                         videoEntity.videoUrl,
                         videoEntity.thumbnailUrl,
                         videoEntity.title,
-                        videoEntity.like))
+                        videoEntity.likeCount))
                 .from(videoEntity)
                 .orderBy(videoEntity.createdDate.desc())
                 .offset(pageable.getOffset())

@@ -17,6 +17,7 @@ public class VideoEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "video_id")
     private Long id;
 
     private String email;
@@ -30,16 +31,16 @@ public class VideoEntity extends BaseTimeEntity {
     private String title;
 
     @Column(name = "video_like")
-    private Long like;
+    private Long likeCount;
 
 
     @Builder
-    public VideoEntity(String email, String videoUrl, String thumbnailUrl, String title, Long like) {
+    public VideoEntity(String email, String videoUrl, String thumbnailUrl, String title, Long likeCount) {
         this.email = email;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
-        this.like = like;
+        this.likeCount = likeCount;
     }
 
     public static VideoEntity of(String videoUrl, String thumbnailUrl, MakeVideoReqDto videoReqDto) {
@@ -48,7 +49,7 @@ public class VideoEntity extends BaseTimeEntity {
                 .videoUrl(videoUrl)
                 .thumbnailUrl(thumbnailUrl)
                 .title(videoReqDto.getTitle())
-                .like(0L)
+                .likeCount(0L)
                 .build();
     }
 }
