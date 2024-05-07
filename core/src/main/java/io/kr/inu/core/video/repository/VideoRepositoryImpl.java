@@ -19,7 +19,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
 
     @Override
     public List<EachVideoData> findVideoByDate(Pageable pageable) {
-        JPAQuery<EachVideoData> data =jpaQueryFactory
+        JPAQuery<EachVideoData> data = jpaQueryFactory
                 .select(Projections.constructor(EachVideoData.class,
                         videoEntity.videoUrl,
                         videoEntity.thumbnailUrl,
