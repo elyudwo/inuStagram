@@ -1,11 +1,9 @@
 package io.kr.inu.webclient.api.token;
 
-import io.kr.inu.core.email.dto.CertificationResponse;
 import io.kr.inu.core.token.TokenService;
 import io.kr.inu.core.token.dto.TokenResponse;
 import io.kr.inu.webclient.api.email.dto.CertificationRequest;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
