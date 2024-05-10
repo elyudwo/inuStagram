@@ -1,10 +1,17 @@
 package io.kr.inu.core.user.domain;
 
+import io.kr.inu.core.like.domain.LikeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -21,6 +28,10 @@ public class UserEntity {
     private String email;
 
     private String color;
+
+    @OneToMany(mappedBy = "user", cascade = REMOVE, fetch = LAZY)
+    private List<LikeEntity> likes = new ArrayList<>();
+
 
     @Builder
     public UserEntity(String email) {
