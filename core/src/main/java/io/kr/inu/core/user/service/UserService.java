@@ -14,7 +14,6 @@ public class UserService {
     private final UserValidateService userValidateService;
 
     public void registerUser(String email) {
-        userValidateService.existUserByEmail(email);
         userRepository.save(UserEntity.builder()
                 .email(email)
                 .build());
