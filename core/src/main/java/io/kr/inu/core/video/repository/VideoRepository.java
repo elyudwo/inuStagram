@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends JpaRepository<VideoEntity, Long>, VideoRepositoryCustom {
+
+    Long countByEmail(String email);
 }
