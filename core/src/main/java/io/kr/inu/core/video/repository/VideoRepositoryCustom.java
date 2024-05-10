@@ -10,4 +10,6 @@ import java.util.List;
 public interface VideoRepositoryCustom {
 
     List<EachVideoData> findVideoByDate(Pageable pageable);
+    List<EachVideoData> findVideoByEmail(String email, Pageable pageable);
+
 }

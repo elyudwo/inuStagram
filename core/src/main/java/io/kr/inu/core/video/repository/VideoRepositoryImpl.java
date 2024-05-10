@@ -32,4 +32,21 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
 
         return data.fetch();
     }
+
+    @Override
+    public List<EachVideoData> findVideoByEmail(String email, Pageable pageable) {
+        JPAQuery<EachVideoData> data = jpaQueryFactory
+                .select(Projections.constructor(EachVideoData.class,
+                        videoEntity.id,
+                        videoEntity.videoUrl,
+                        videoEntity.thumbnailUrl,
+                        videoEntity.title))
+                .from(videoEntity)
+                .where(videoEntity.email.eq(email))
+                .orderBy(videoEntity.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+
+        return data.fetch();
+    }
 }

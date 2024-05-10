@@ -91,7 +91,7 @@ public class VideoService {
         userValidateService.existUserByEmail(email);
         Pageable pageable = PageRequest.of(page, size);
         List<EachVideoData> posts = videoRepository.findVideoByDate(pageable);
-        boolean next = isNext(videoRepository.count(), page, size);;
+        boolean next = isNext(videoRepository.count(), page, size);
 
         return FindVideoResponseDto.builder()
                 .allVideos(posts)
@@ -101,5 +101,17 @@ public class VideoService {
 
     private boolean isNext(long count, int page, int size) {
         return (long) size * page + size < count;
+    }
+
+    public FindVideoResponseDto findVideoByEmail(String email, int page, int size) {
+        userValidateService.existUserByEmail(email);
+        Pageable pageable = PageRequest.of(page, size);
+        List<EachVideoData> posts = videoRepository.findVideoByEmail(email, pageable);
+        boolean next = isNext(videoRepository.count(), page, size);
+
+        return FindVideoResponseDto.builder()
+                .allVideos(posts)
+                .next(next)
+                .build();
     }
 }
