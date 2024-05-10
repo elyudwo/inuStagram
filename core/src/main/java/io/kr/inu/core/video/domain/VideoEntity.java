@@ -37,19 +37,15 @@ public class VideoEntity extends BaseTimeEntity {
 
     private String title;
 
-    @Column(name = "video_like")
-    private Long likeCount;
-
     @OneToMany(mappedBy = "video", cascade = REMOVE, fetch = LAZY)
     private List<LikeEntity> likes = new ArrayList<>();
 
     @Builder
-    public VideoEntity(String email, String videoUrl, String thumbnailUrl, String title, Long likeCount) {
+    public VideoEntity(String email, String videoUrl, String thumbnailUrl, String title) {
         this.email = email;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
-        this.likeCount = likeCount;
     }
 
     public static VideoEntity of(String videoUrl, String thumbnailUrl, MakeVideoReqDto videoReqDto) {
@@ -58,7 +54,6 @@ public class VideoEntity extends BaseTimeEntity {
                 .videoUrl(videoUrl)
                 .thumbnailUrl(thumbnailUrl)
                 .title(videoReqDto.getTitle())
-                .likeCount(0L)
                 .build();
     }
 }

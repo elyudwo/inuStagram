@@ -10,14 +10,12 @@ public class EachVideoData {
     private final String videoUrl;
     private final String thumbnailUrl;
     private final String title;
-    private final Long like;
 
     @Builder
-    public EachVideoData(Long videoId, String videoUrl, String thumbnailUrl, String title, Long like) {
+    public EachVideoData(Long videoId, String videoUrl, String thumbnailUrl, String title) {
         this.videoId = videoId;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
-        this.like = like;
     }
 }
