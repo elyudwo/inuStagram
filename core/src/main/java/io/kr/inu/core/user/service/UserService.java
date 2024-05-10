@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserValidateService userValidateService;
 
     public void registerUser(String email) {
-        if(!userRepository.existsByEmail(email)) {
-            userRepository.save(UserEntity.builder()
-                    .email(email)
-                    .build());
-        }
+        userRepository.save(UserEntity.builder()
+                .email(email)
+                .build());
     }
 
     public FindUserRespDto findUser(String email) {
+        userRepository.existsByEmail(email);
         UserEntity user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
 
         return FindUserRespDto.builder()

@@ -1,6 +1,7 @@
 package io.kr.inu.core.video.service;
 
 import io.kr.inu.core.common.Converter;
+import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
@@ -38,9 +39,11 @@ public class VideoService {
     private final VideoS3Repository videoS3Repository;
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
+    private final UserValidateService userValidateService;
 
     @Transactional
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
+        userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
 //        videoValidateService.validateHarmVideo(video);
@@ -85,9 +88,10 @@ public class VideoService {
     }
 
     public FindVideoResponseDto findVideoByDate(String email, int page, int size) {
+        userValidateService.existUserByEmail(email);
         Pageable pageable = PageRequest.of(page, size);
         List<EachVideoData> posts = videoRepository.findVideoByDate(pageable);
-        boolean next = isNext(videoRepository.count(), page, size);;
+        boolean next = isNext(videoRepository.count(), page, size);
 
         return FindVideoResponseDto.builder()
                 .allVideos(posts)
@@ -97,5 +101,17 @@ public class VideoService {
 
     private boolean isNext(long count, int page, int size) {
         return (long) size * page + size < count;
+    }
+
+    public FindVideoResponseDto findVideoByEmail(String email, int page, int size) {
+        userValidateService.existUserByEmail(email);
+        Pageable pageable = PageRequest.of(page, size);
+        List<EachVideoData> posts = videoRepository.findVideoByEmail(email, pageable);
+        boolean next = isNext(videoRepository.count(), page, size);
+
+        return FindVideoResponseDto.builder()
+                .allVideos(posts)
+                .next(next)
+                .build();
     }
 }
