@@ -19,8 +19,8 @@ public class LikeController {
 
     @GetMapping("/v1/get/likes")
     @Operation(summary = "동영상 좋아요 개수 조회", description = "쿼리 파라미터로 영상 식별자를 보내주세요.")
-    public ResponseEntity<EachVideoLikes> getVideoLikes(@RequestParam Long videoId) {
-        return ResponseEntity.ok(likeService.getVideoLike(videoId));
+    public ResponseEntity<EachVideoLikes> getVideoLikes(UserEmail userEmail, @RequestParam Long videoId) {
+        return ResponseEntity.ok(likeService.getVideoLike(userEmail.getEmail(), videoId));
     }
 
     @PostMapping("/v1/insert/like")

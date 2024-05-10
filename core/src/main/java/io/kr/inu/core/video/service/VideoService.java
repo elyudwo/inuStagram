@@ -1,6 +1,7 @@
 package io.kr.inu.core.video.service;
 
 import io.kr.inu.core.common.Converter;
+import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
@@ -38,9 +39,11 @@ public class VideoService {
     private final VideoS3Repository videoS3Repository;
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
+    private final UserValidateService userValidateService;
 
     @Transactional
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
+        userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
 //        videoValidateService.validateHarmVideo(video);
@@ -54,12 +57,12 @@ public class VideoService {
     private File extractThumbnail(MultipartFile videoFile) throws IOException {
         log.info("extractThumbnail 시1작");
         // local
-//        FFmpeg ffMpeg = new FFmpeg("C:\\ffmpeg\\bin\\ffmpeg");
-//        FFprobe ffProbe = new FFprobe("C:\\ffmpeg\\bin\\ffprobe");
+        FFmpeg ffMpeg = new FFmpeg("C:\\ffmpeg\\bin\\ffmpeg");
+        FFprobe ffProbe = new FFprobe("C:\\ffmpeg\\bin\\ffprobe");
 
         // ec2
-          FFmpeg ffMpeg = new FFmpeg("/usr/bin/ffmpeg-6.1-amd64-static/ffmpeg");
-          FFprobe ffProbe = new FFprobe("/usr/bin/ffmpeg-6.1-amd64-static/ffprobe");
+//          FFmpeg ffMpeg = new FFmpeg("/usr/bin/ffmpeg-6.1-amd64-static/ffmpeg");
+//          FFprobe ffProbe = new FFprobe("/usr/bin/ffmpeg-6.1-amd64-static/ffprobe");
 
 
         File outputThumbnailFile = File.createTempFile("temp_", ".jpg");
@@ -85,6 +88,7 @@ public class VideoService {
     }
 
     public FindVideoResponseDto findVideoByDate(String email, int page, int size) {
+        userValidateService.existUserByEmail(email);
         Pageable pageable = PageRequest.of(page, size);
         List<EachVideoData> posts = videoRepository.findVideoByDate(pageable);
         boolean next = isNext(videoRepository.count(), page, size);;

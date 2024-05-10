@@ -6,7 +6,7 @@ import io.kr.inu.core.like.dto.UpLikeReqDto;
 import io.kr.inu.core.like.repository.LikeRepository;
 import io.kr.inu.core.user.domain.UserEntity;
 import io.kr.inu.core.user.repository.UserRepository;
-import io.kr.inu.core.user.service.UserService;
+import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
@@ -25,8 +25,10 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
+    private final UserValidateService userValidateService;
 
-    public EachVideoLikes getVideoLike(Long videoId) {
+    public EachVideoLikes getVideoLike(String email, Long videoId) {
+        userValidateService.existUserByEmail(email);
         Long likes = likeRepository.countByVideo_Id(videoId);
 
         return EachVideoLikes.builder()
@@ -35,8 +37,8 @@ public class LikeService {
     }
 
     public void plusLike(UpLikeReqDto reqDto, String email) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
-        VideoEntity video = videoRepository.findById(reqDto.getVideoId()).orElseThrow(RuntimeException::new);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
+        VideoEntity video = videoRepository.findById(reqDto.getVideoId()).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
         if(likeRepository.existsByVideoAndUser(video, user)) {
             throw new IllegalArgumentException("한 동영상에 한개의 좋아요만 가능해요.");
         }
