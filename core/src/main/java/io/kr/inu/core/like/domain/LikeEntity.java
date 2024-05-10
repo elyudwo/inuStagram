@@ -4,6 +4,7 @@ import io.kr.inu.core.user.domain.UserEntity;
 import io.kr.inu.core.video.domain.VideoEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,10 @@ public class LikeEntity {
     @ManyToOne
     @JoinColumn(name = "video_id")
     private VideoEntity video;
+
+    @Builder
+    public LikeEntity(UserEntity user, VideoEntity video) {
+        this.user = user;
+        this.video = video;
+    }
 }
