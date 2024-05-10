@@ -21,6 +21,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
     public List<EachVideoData> findVideoByDate(Pageable pageable) {
         JPAQuery<EachVideoData> data = jpaQueryFactory
                 .select(Projections.constructor(EachVideoData.class,
+                        videoEntity.id,
                         videoEntity.videoUrl,
                         videoEntity.thumbnailUrl,
                         videoEntity.title,
