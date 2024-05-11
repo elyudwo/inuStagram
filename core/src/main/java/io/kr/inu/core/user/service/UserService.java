@@ -14,9 +14,11 @@ public class UserService {
     private final UserValidateService userValidateService;
 
     public void registerUser(String email) {
-        userRepository.save(UserEntity.builder()
-                .email(email)
-                .build());
+        if(!userValidateService.duplicateCheckUserByEmail(email)) {
+            userRepository.save(UserEntity.builder()
+                    .email(email)
+                    .build());
+        }
     }
 
     public FindUserRespDto findUser(String email) {

@@ -15,4 +15,8 @@ public class UserValidateService {
             throw new IllegalArgumentException("존재하지 않는 유저입니다.");
         }
     }
+
+    public boolean duplicateCheckUserByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
