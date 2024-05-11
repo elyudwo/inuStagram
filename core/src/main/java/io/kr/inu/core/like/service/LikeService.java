@@ -3,6 +3,7 @@ package io.kr.inu.core.like.service;
 import io.kr.inu.core.like.domain.LikeEntity;
 import io.kr.inu.core.like.dto.EachVideoLikes;
 import io.kr.inu.core.like.dto.UpLikeReqDto;
+import io.kr.inu.core.like.dto.VideoLikeWhether;
 import io.kr.inu.core.like.repository.LikeRepository;
 import io.kr.inu.core.user.domain.UserEntity;
 import io.kr.inu.core.user.repository.UserRepository;
@@ -77,5 +78,18 @@ public class LikeService {
 
     private boolean isNext(long count, int page, int size) {
         return (long) size * page + size < count;
+    }
+
+    public VideoLikeWhether checkVideoLikeByUser(String email, Long videoId) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
+        VideoEntity video = videoRepository.findById(videoId).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
+        if(likeRepository.existsByVideoAndUser(video, user)) {
+            return VideoLikeWhether.builder()
+                    .like(true)
+                    .build();
+        }
+        return VideoLikeWhether.builder()
+                .like(false)
+                .build();
     }
 }
