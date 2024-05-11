@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface LikeRepository extends JpaRepository<LikeEntity, Long>, LikeRepositoryCustom {
     Long countByVideo_Id(Long videoId);
     Long countByUser_Id(Long userId);
-
     boolean existsByVideoAndUser(VideoEntity video, UserEntity user);
 }
