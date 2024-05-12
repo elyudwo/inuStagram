@@ -31,7 +31,7 @@ public class LikeController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/v1/delete/like")
+    @DeleteMapping("/v1/delete/like")
     @Operation(summary = "동영상 좋아요 삭제", description = "JWT를 헤더에 삽입해주세요. 영상 식별자를 Json 형식으로 보내주세요")
     public ResponseEntity<Void> deleteVideoLikes(UserEmail userEmail, @RequestBody UpLikeReqDto reqDto) {
         likeService.deleteLike(reqDto, userEmail.getEmail());

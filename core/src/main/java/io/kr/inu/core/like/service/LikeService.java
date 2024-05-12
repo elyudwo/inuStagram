@@ -16,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LikeService {
 
     private final LikeRepository likeRepository;
@@ -40,7 +42,7 @@ public class LikeService {
     public void plusLike(UpLikeReqDto reqDto, String email) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
         VideoEntity video = videoRepository.findById(reqDto.getVideoId()).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
-        if(likeRepository.existsByVideoAndUser(video, user)) {
+        if (likeRepository.existsByVideoAndUser(video, user)) {
             throw new IllegalArgumentException("한 동영상에 한개의 좋아요만 가능해요.");
         }
 
@@ -55,11 +57,7 @@ public class LikeService {
     public void deleteLike(UpLikeReqDto reqDto, String email) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
         VideoEntity video = videoRepository.findById(reqDto.getVideoId()).orElseThrow(RuntimeException::new);
-        LikeEntity like = LikeEntity.builder()
-                .user(user)
-                .video(video)
-                .build();
-
+        LikeEntity like = likeRepository.findByVideoAndUser(video, user).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 영상입니다"));
         likeRepository.delete(like);
     }
 
@@ -68,7 +66,8 @@ public class LikeService {
         Pageable pageable = PageRequest.of(page, size);
 
         List<EachVideoData> posts = likeRepository.findVideoByUserLikes(user, pageable);
-        boolean next = isNext(likeRepository.countByUser_Id(user.getId()), page, size);;
+        boolean next = isNext(likeRepository.countByUser_Id(user.getId()), page, size);
+        ;
 
         return FindVideoResponseDto.builder()
                 .allVideos(posts)
@@ -83,7 +82,7 @@ public class LikeService {
     public VideoLikeWhether checkVideoLikeByUser(String email, Long videoId) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
         VideoEntity video = videoRepository.findById(videoId).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
-        if(likeRepository.existsByVideoAndUser(video, user)) {
+        if (likeRepository.existsByVideoAndUser(video, user)) {
             return VideoLikeWhether.builder()
                     .like(true)
                     .build();
