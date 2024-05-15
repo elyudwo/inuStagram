@@ -23,7 +23,7 @@ public class VideoValidateService {
     private final RestTemplate restTemplate;
 
     public void validateHarmVideo(MultipartFile video) throws IOException {
-        String apiUrl = "http://3.35.206.130:5000/process_video/sensitive_classify";
+        String apiUrl = "http://43.203.244.194:5000/process_video/sensitive_classify";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -46,10 +46,9 @@ public class VideoValidateService {
 
         String responseData = restTemplate.postForObject(apiUrl, requestEntity, String.class);
 
+        log.info("응답 값 출력 : " + responseData);
         if(responseData != null && responseData.contains("true")) {
             throw new IllegalArgumentException("유해 동영상입니다.");
         }
-
-        log.info("응답 값 출력 : " + responseData);
     }
 }

@@ -45,8 +45,8 @@ public class VideoService {
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
         userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
+        videoValidateService.validateHarmVideo(video);
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
-//        videoValidateService.validateHarmVideo(video);
         String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 
         videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
