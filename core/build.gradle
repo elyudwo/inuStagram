@@ -30,4 +30,7 @@ dependencies {
 
     // ffmpeg
     implementation("net.bramp.ffmpeg:ffmpeg:0.7.0")
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
