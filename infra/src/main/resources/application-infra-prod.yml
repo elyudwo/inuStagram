@@ -1,7 +1,7 @@
 spring:
   data:
     redis:
-      host: studyhub-redis-cluster.4oxtwa.clustercfg.apn2.cache.amazonaws.com
+      host: ${redis.hostname}
       port: 6379
 
 cloud:
@@ -11,10 +11,10 @@ cloud:
     region:
       static: ap-northeast-2
     credentials:
-      access-key: AKIAQ3EGPYGBCDENDNZG
-      secret-key: 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
+      access-key: ${s3.access}
+      secret-key: ${s3.secret}
     s3:
-      bucket: studyhub-bucket
+      bucket: ${s3.name}
 
 jwt:
-  secret: Nana
+  secret: ${jwt.secret}
