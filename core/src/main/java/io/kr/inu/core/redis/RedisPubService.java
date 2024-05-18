@@ -7,6 +7,8 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 
+import java.nio.channels.Channel;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -15,15 +17,11 @@ public class RedisPubService {
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisPublisher redisPublisher;
     private final RedisSubscribeListener redisSubscribeListener;
+    private final ChannelTopic channelTopic = new ChannelTopic("flaskServer");
 
-    public void pubMsgChannel(String channel, LikeRequestDto message) {
-        redisMessageListenerContainer.addMessageListener(redisSubscribeListener, new ChannelTopic(channel));
-        LikeDto likeDto = LikeDto.builder()
-                        .userId(message.getUserId())
-                        .videoId(message.getVideoId())
-                        .build();
-
-        redisPublisher.publish(new ChannelTopic(channel), likeDto);
+    public void pubMsgChannel(HarmfulVideoReqDto dto) {
+        log.info("메시지 발행 : " + dto.getFileName());
+        redisPublisher.publish(channelTopic, dto);
     }
 
     public void cancelSubChannel(String channel) {
