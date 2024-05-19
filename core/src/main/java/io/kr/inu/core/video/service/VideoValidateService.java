@@ -1,5 +1,7 @@
 package io.kr.inu.core.video.service;
 
+import io.kr.inu.core.redis.HarmfulVideoReqDto;
+import io.kr.inu.core.redis.RedisPubService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -20,35 +22,9 @@ import java.io.IOException;
 @Slf4j
 public class VideoValidateService {
 
-    private final RestTemplate restTemplate;
+    private final RedisPubService redisPubService;
 
-    public void validateHarmVideo(MultipartFile video) throws IOException {
-        String apiUrl = "http://43.203.244.194:5000/process_video/sensitive_classify";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
-
-        Resource videoResource = new InputStreamResource(video.getInputStream()) {
-            @Override
-            public long contentLength() {
-                return video.getSize();
-            }
-
-            @Override
-            public String getFilename() {
-                return video.getOriginalFilename();
-            }
-        };
-
-        formData.add("video", videoResource);
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(formData, headers);
-
-        String responseData = restTemplate.postForObject(apiUrl, requestEntity, String.class);
-
-        log.info("응답 값 출력 : " + responseData);
-        if(responseData != null && responseData.contains("true")) {
-            throw new IllegalArgumentException("유해 동영상입니다.");
-        }
+    public void validateHarmVideo(HarmfulVideoReqDto dto) {
+        redisPubService.pubMsgChannel(dto);
     }
 }
