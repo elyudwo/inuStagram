@@ -46,9 +46,9 @@ public class VideoService {
         String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 
         VideoEntity videoEntity = videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
-        log.info("여기까진 들어왔어");
-
         videoValidateService.validateHarmVideo(new HarmfulVideoReqDto(videoEntity.getId(), video.getOriginalFilename()));
+
+        videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
         return videoUrl;
     }
 
@@ -59,8 +59,8 @@ public class VideoService {
 //        FFprobe ffProbe = new FFprobe("C:\\ffmpeg\\bin\\ffprobe");
 
         // ec2
-          FFmpeg ffMpeg = new FFmpeg("/usr/bin/ffmpeg-6.1-amd64-static/ffmpeg");
-          FFprobe ffProbe = new FFprobe("/usr/bin/ffmpeg-6.1-amd64-static/ffprobe");
+        FFmpeg ffMpeg = new FFmpeg("/usr/bin/ffmpeg-6.1-amd64-static/ffmpeg");
+        FFprobe ffProbe = new FFprobe("/usr/bin/ffmpeg-6.1-amd64-static/ffprobe");
 
 
         File outputThumbnailFile = File.createTempFile("temp_", ".jpg");
