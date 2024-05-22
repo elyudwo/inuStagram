@@ -41,3 +41,6 @@ logging:
     org:
       springframework:
         cache: DEBUG
+
+channel:
+  name: springServer
