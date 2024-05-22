@@ -23,27 +23,19 @@ public class RedisSubscribeListener implements MessageListener {
 
     private final RedisTemplate<String, Object> template;
     private final ObjectMapper objectMapper;
-    private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
     private final VideoRepository videoRepository;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
             String publishMessage = template.getStringSerializer().deserialize(message.getBody());
+            HarmfulVideoDto dto = objectMapper.readValue(publishMessage, HarmfulVideoDto.class);
 
-            LikeDto dto = objectMapper.readValue(publishMessage, LikeDto.class);
-
-            log.info("Redis Subscribe Channel : " + dto.getUserId());
             log.info("Redis SUB Message : {}", publishMessage);
 
-            UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow();
-            VideoEntity video = videoRepository.findById(dto.getVideoId()).orElseThrow();
-            LikeEntity like = LikeEntity.builder()
-                            .user(user)
-                                    .video(video)
-                                            .build();
-            likeRepository.save(like);
+            VideoEntity video = videoRepository.findById(dto.getVideoId()).
+                    orElseThrow(() -> new IllegalArgumentException("존재하지 않는 영상입니다."));
+            videoRepository.delete(video);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }

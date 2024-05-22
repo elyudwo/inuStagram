@@ -1,6 +1,6 @@
 package io.kr.inu.core.video.service;
 
-import io.kr.inu.core.common.Converter;
+import io.kr.inu.core.redis.HarmfulVideoReqDto;
 import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
@@ -15,11 +15,8 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import org.apache.tomcat.util.http.fileupload.MultipartStream;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,9 +42,11 @@ public class VideoService {
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
         userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
-//        videoValidateService.validateHarmVideo(video);
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
         String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
+
+        VideoEntity videoEntity = videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
+        videoValidateService.validateHarmVideo(new HarmfulVideoReqDto(videoEntity.getId(), video.getOriginalFilename()));
 
         videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
         return videoUrl;

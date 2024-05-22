@@ -1,14 +1,15 @@
 package io.kr.inu.core.redis;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-public class LikeRequestDto {
+public class HarmfulVideoDto {
 
-    private Long userId;
     private Long videoId;
+
+    public HarmfulVideoDto(Long videoId) {
+        this.videoId = videoId;
+    }
 }
