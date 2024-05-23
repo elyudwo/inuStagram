@@ -16,8 +16,7 @@ import java.util.Date;
 @Service
 public class JwtProvider {
 
-    @Value("Nana")
-    private String SECRET;
+    private String SECRET = "NANA";
 
     public JwtDto createJwtResponseDto(String email) {
         return JwtDto.builder()

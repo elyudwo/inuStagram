@@ -17,8 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Value("${jwt.secret}")
-    private String SECRET;
+    private String SECRET = "NANA";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
