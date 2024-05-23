@@ -33,13 +33,13 @@ public class VideoController {
 
     @Operation(summary = "동영상 최신순 조회 기능", description = "JWT를 헤더에 보내주세요. 조회하려는 페이지와 동영상 개수를 입력해주세요.")
     @GetMapping(value = "/v1/find/video")
-    public ResponseEntity<FindVideoResponseDto> findVideoByDate(UserEmail email, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<FindVideoResponseDto> findVideoByDate(UserEmail email, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
         return ResponseEntity.ok(videoService.findVideoByDate(email.getEmail(), page, size));
     }
 
     @Operation(summary = "내가 올린 동영상 조회 기능", description = "JWT를 헤더에 보내주세요. 조회하려는 페이지와 동영상 개수를 입력해주세요.")
     @GetMapping(value = "/v1/find/video/myself")
-    public ResponseEntity<FindVideoResponseDto> findVideoByEmail(UserEmail email, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<FindVideoResponseDto> findVideoByEmail(UserEmail email, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
         return ResponseEntity.ok(videoService.findVideoByEmail(email.getEmail(), page, size));
     }
 }
