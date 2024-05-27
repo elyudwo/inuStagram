@@ -16,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "user_tb")
 public class UserEntity {
 
     @Id
@@ -32,10 +32,18 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = REMOVE, fetch = LAZY)
     private List<LikeEntity> likes = new ArrayList<>();
 
+    private Long testLike;
 
     @Builder
     public UserEntity(String email) {
         this.email = email;
         this.color = UserColor.issueRandomColor();
+        this.testLike = 0L;
     }
+
+    public Long plusTestLike() {
+        testLike++;
+        return testLike;
+    }
+
 }
