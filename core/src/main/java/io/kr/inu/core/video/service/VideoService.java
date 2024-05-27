@@ -15,6 +15,7 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,10 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
     private final UserValidateService userValidateService;
+    @Value("${ffmpeg.dir.ffmpeg}")
+    private String ffmpeg;
+    @Value("${ffmpeg.dir.ffprobe}")
+    private String ffprobe;
 
     @Transactional
     public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
@@ -52,15 +57,8 @@ public class VideoService {
     }
 
     private File extractThumbnail(MultipartFile videoFile) throws IOException {
-        log.info("extractThumbnail 시1작");
-        // local
-//        FFmpeg ffMpeg = new FFmpeg("C:\\ffmpeg\\bin\\ffmpeg");
-//        FFprobe ffProbe = new FFprobe("C:\\ffmpeg\\bin\\ffprobe");
-
-        // ec2
-        FFmpeg ffMpeg = new FFmpeg("/usr/bin/ffmpeg-7.0-amd64-static/ffmpeg");
-        FFprobe ffProbe = new FFprobe("/usr/bin/ffmpeg-7.0-amd64-static/ffprobe");
-
+        FFmpeg ffMpeg = new FFmpeg(ffmpeg);
+        FFprobe ffProbe = new FFprobe(ffprobe);
 
         File outputThumbnailFile = File.createTempFile("temp_", ".jpg");
 
@@ -80,7 +78,6 @@ public class VideoService {
         FFmpegExecutor executor = new FFmpegExecutor(ffMpeg, ffProbe);
         executor.createJob(builder).run();
 
-        log.info("extractThumbnail 종료");
         return thumbnailOutputFile;
     }
 

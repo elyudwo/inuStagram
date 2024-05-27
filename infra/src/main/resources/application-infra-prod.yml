@@ -18,3 +18,8 @@ cloud:
 
 jwt:
   secret: ${jwt.secret}
+
+ffmpeg:
+  dir:
+    ffmpeg: ${ffmpeg.ffmpeg}
+    ffprobe: ${ffmpeg.ffprobe}
