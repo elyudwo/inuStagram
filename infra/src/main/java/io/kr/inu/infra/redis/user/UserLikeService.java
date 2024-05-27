@@ -1,4 +1,4 @@
-package io.kr.inu.infra.redis;
+package io.kr.inu.infra.redis.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

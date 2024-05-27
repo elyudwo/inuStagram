@@ -2,13 +2,8 @@ package io.kr.inu.core.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.kr.inu.core.like.domain.LikeEntity;
-import io.kr.inu.core.like.repository.LikeRepository;
-import io.kr.inu.core.user.domain.UserEntity;
-import io.kr.inu.core.user.repository.UserRepository;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.repository.VideoRepository;
-import io.kr.inu.infra.redis.LikeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
