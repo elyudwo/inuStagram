@@ -1,4 +1,4 @@
-package io.kr.inu.infra.redis;
+package io.kr.inu.infra.redis.config;
 
 import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
