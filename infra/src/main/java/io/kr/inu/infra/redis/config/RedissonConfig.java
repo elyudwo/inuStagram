@@ -1,4 +1,4 @@
-package io.kr.inu.infra.redis;
+package io.kr.inu.infra.redis.config;
 
 import lombok.RequiredArgsConstructor;
 import org.redisson.Redisson;
@@ -19,7 +19,7 @@ public class RedissonConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://" + redisHost + ":" + 6379);
+                .setAddress("redis://" + "localhost" + ":" + 6379);
 
         return Redisson.create(config);
     }
