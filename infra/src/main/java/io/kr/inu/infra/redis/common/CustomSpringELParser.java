@@ -1,14 +1,13 @@
 package io.kr.inu.infra.redis.common;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 @Slf4j
+@NoArgsConstructor
 public class CustomSpringELParser {
-
-    private CustomSpringELParser() {
-    }
 
     public static Object getDynamicValue(String[] parameterNames, Object[] args, String key) {
         SpelExpressionParser parser = new SpelExpressionParser();
