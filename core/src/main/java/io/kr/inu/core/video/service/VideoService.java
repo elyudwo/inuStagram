@@ -51,7 +51,7 @@ public class VideoService {
         String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 
 //        videoValidateService.validateHarmVideo(new HarmfulVideoReqDto(videoEntity.getId(), video.getOriginalFilename()));
-//        videoValidateService.validateHarmVideo(video);
+        videoValidateService.validateHarmVideo(video);
         videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
         return videoUrl;
     }

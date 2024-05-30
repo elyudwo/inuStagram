@@ -30,7 +30,7 @@ public class VideoValidateService {
     }
 
     public void validateHarmVideo(MultipartFile video) throws IOException {
-        String apiUrl = "http://43.203.118.30:5000/process_video/sensitive_classify";
+        String apiUrl = "http://43.203.18.36:5000/process_video/sensitive_classify";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
