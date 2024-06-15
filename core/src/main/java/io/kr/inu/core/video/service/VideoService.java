@@ -7,6 +7,7 @@ import io.kr.inu.core.video.dto.EachVideoData;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
 import io.kr.inu.core.video.repository.VideoRepository;
+import io.kr.inu.infra.s3.S3Service;
 import io.kr.inu.infra.s3.VideoS3Repository;
 import io.kr.inu.infra.s3.MultipartDto;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,7 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final VideoValidateService videoValidateService;
     private final UserValidateService userValidateService;
+    private final S3Service s3Service;
     @Value("${ffmpeg.dir.ffmpeg}")
     private String ffmpeg;
     @Value("${ffmpeg.dir.ffprobe}")
@@ -51,7 +55,7 @@ public class VideoService {
         String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 
 //        videoValidateService.validateHarmVideo(new HarmfulVideoReqDto(videoEntity.getId(), video.getOriginalFilename()));
-        videoValidateService.validateHarmVideo(video);
+//        videoValidateService.validateHarmVideo(video);
         videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
         return videoUrl;
     }
@@ -107,5 +111,9 @@ public class VideoService {
                 .allVideos(posts)
                 .next(next)
                 .build();
+    }
+
+    public Map<String, String> getPresignedUrl(String prefix, String fileName) {
+        return s3Service.getPresignedUrl(prefix, fileName);
     }
 }

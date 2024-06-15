@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,4 +43,12 @@ public class VideoController {
     public ResponseEntity<FindVideoResponseDto> findVideoByEmail(UserEmail email, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
         return ResponseEntity.ok(videoService.findVideoByEmail(email.getEmail(), page, size));
     }
+
+    @Operation(summary = "presigned-url 발급 API")
+    @GetMapping(value = "/v1/generate-presigned-url/{fileName}")
+    public ResponseEntity<Map<String, String>> getPresignedUrl(@PathVariable(name = "fileName") String fileName) {
+        Map<String, String> presignedUrl = videoService.getPresignedUrl("mp4", fileName);
+        return ResponseEntity.ok(presignedUrl);
+    }
+
 }
