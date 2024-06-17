@@ -6,6 +6,7 @@ import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
+import io.kr.inu.core.video.dto.UploadVideoReqDto;
 import io.kr.inu.core.video.repository.VideoRepository;
 import io.kr.inu.infra.s3.S3Service;
 import io.kr.inu.infra.s3.VideoS3Repository;
@@ -58,6 +59,12 @@ public class VideoService {
 //        videoValidateService.validateHarmVideo(video);
         videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
         return videoUrl;
+    }
+
+    @Transactional
+    public void uploadVideoUrl(String userEmail, UploadVideoReqDto dto) {
+        userValidateService.existUserByEmail(userEmail);
+        videoRepository.save(dto.convertDtoToEntity(userEmail));
     }
 
     private File extractThumbnail(MultipartFile videoFile) throws IOException {
