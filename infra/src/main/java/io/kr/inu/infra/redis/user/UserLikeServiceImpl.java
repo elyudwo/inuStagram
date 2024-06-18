@@ -13,12 +13,10 @@ import org.springframework.stereotype.Service;
 public class UserLikeServiceImpl {
 
     private final RedissonClient redissonClient;
-    private final TestUser testUser;
 
     @DistributedLock(hashKey = "#hashKey", field = "#field")
     public int plusLike(String hashKey, String field, int a) {
         int likeCnt = currentLike(hashKey, field);
-        testUser.hi();
         setLike(hashKey, field, likeCnt + 1);
         return 3;
     }
