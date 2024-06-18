@@ -3,6 +3,7 @@ package io.kr.inu.webclient.api.video;
 import io.kr.inu.core.common.Timer;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
+import io.kr.inu.core.video.dto.UploadVideoReqDto;
 import io.kr.inu.core.video.service.VideoService;
 import io.kr.inu.webclient.api.resolver.UserEmail;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,4 +45,20 @@ public class VideoController {
     public ResponseEntity<FindVideoResponseDto> findVideoByEmail(UserEmail email, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
         return ResponseEntity.ok(videoService.findVideoByEmail(email.getEmail(), page, size));
     }
+
+    @Operation(summary = "presigned-url 발급 API")
+    @GetMapping(value = "/v1/generate-presigned-url/{fileName}")
+    public ResponseEntity<Map<String, String>> getPresignedUrl(@PathVariable(name = "fileName") String fileName) {
+        Map<String, String> presignedUrl = videoService.getPresignedUrl("mp4", fileName);
+
+        return ResponseEntity.ok(presignedUrl);
+    }
+
+    @Operation(summary = "영상 URL 저장 API")
+    @PostMapping(value = "/v2/upload/video")
+    public ResponseEntity<Void> uploadVideo(UserEmail email, @RequestBody UploadVideoReqDto dto) {
+        videoService.uploadVideoUrl(email.getEmail(), dto);
+        return ResponseEntity.ok().build();
+    }
+
 }
