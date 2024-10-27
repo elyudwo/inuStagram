@@ -22,8 +22,7 @@ public class EmailSendService {
     private final SpringTemplateEngine templateEngine;
     private final EmailCacheService emailCacheService;
 
-    @Value("${spring.mail.username}")
-    private String emailAddress;
+    private String emailAddress = "inustudyhub@gmail.com";
 
     public MimeMessage createEmailForm(String toEmail, String authCode) throws MessagingException {
         String setFrom = emailAddress;

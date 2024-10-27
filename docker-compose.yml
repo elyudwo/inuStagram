@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: /webclient
+      dockerfile: Dockerfile
+    tty: true
+    privileged: true
+    container_name: backend
+    networks:
+        - dev-network
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "5000:5000"  # 호스트의 5000 포트를 컨테이너의 5000 포트로 매핑
+    environment:
+      rds.hostname: mysql # MySQL 서비스 이름을 호스트로 설정
+      rds.port: 3306      # MySQL 포트
+      rds.username: root  # MySQL 사용자 이름
+      rds.password: Dudqk9696@ # MySQL 비밀번호
+      rds.db.name: multi_module # 데이터베이스 이름을 환경 변수로 추가
+
+
+  mysql:
+    image: mysql:8
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Dudqk9696@
+      MYSQL_DATABASE: multi_module
+    volumes:
+      - ./db-data:/var/lib/mysql
+    networks:
+      - dev-network
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"  # Redis 기본 포트
+    networks:
+      - dev-network
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  dev-network:
+    driver: bridge
