@@ -40,7 +40,8 @@ public class LikeService {
     }
 
     public void plusLike(UpLikeReqDto reqDto, String email) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
+                new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다 토큰을 다시 확인해주세요: " + email));
         VideoEntity video = videoRepository.findById(reqDto.getVideoId()).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
         if (likeRepository.existsByVideoAndUser(video, user)) {
             throw new IllegalArgumentException("한 동영상에 한개의 좋아요만 가능해요.");
