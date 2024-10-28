@@ -30,7 +30,7 @@ public class LikeService {
     private final VideoRepository videoRepository;
     private final UserValidateService userValidateService;
 
-    // test
+
     public EachVideoLikes getVideoLike(String email, Long videoId) {
         userValidateService.existUserByEmail(email);
         Long likes = likeRepository.countByVideo_Id(videoId);
