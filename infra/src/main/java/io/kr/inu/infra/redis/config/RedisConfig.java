@@ -38,6 +38,14 @@ public class RedisConfig {
     }
 
     @Bean
+    public RedisTemplate<Long, Long> longRedisTemplate() {
+        RedisTemplate<Long, Long> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
     public RedisMessageListenerContainer redisMessageListener() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
