@@ -5,6 +5,7 @@ import io.kr.inu.core.like.dto.UpLikeReqDto;
 import io.kr.inu.core.like.dto.VideoLikeWhether;
 import io.kr.inu.core.like.service.LikeService;
 import io.kr.inu.core.video.dto.FindVideoResponseDto;
+import io.kr.inu.core.video.service.VideoLikeService;
 import io.kr.inu.webclient.api.resolver.UserEmail;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
+    private final VideoLikeService videoLikeService;
 
     @GetMapping("/v1/get/likes")
     @Operation(summary = "동영상 좋아요 개수 조회", description = "쿼리 파라미터로 영상 식별자를 보내주세요.")
     public ResponseEntity<EachVideoLikes> getVideoLikes(UserEmail userEmail, @RequestParam Long videoId) {
-        return ResponseEntity.ok(likeService.getVideoLike(userEmail.getEmail(), videoId));
+        return ResponseEntity.ok(videoLikeService.getVideoLike(userEmail.getEmail(), videoId));
     }
 
     @PostMapping("/v1/insert/like")
     @Operation(summary = "동영상 좋아요 추가", description = "JWT를 헤더에 삽입해주세요. 영상 식별자를 Json 형식으로 보내주세요")
     public ResponseEntity<Void> getVideoLikes(UserEmail userEmail, @RequestBody UpLikeReqDto reqDto) {
-        likeService.plusLike(reqDto, userEmail.getEmail());
+        videoLikeService.plusLike(reqDto.getVideoId(), userEmail.getEmail());
         return ResponseEntity.ok().build();
     }
 
