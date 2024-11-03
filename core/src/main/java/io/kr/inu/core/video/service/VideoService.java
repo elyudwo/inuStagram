@@ -123,4 +123,8 @@ public class VideoService {
     public Map<String, String> getPresignedUrl(String prefix, String fileName) {
         return s3Service.getPresignedUrl(prefix, fileName);
     }
+
+    public VideoEntity getVideoById(Long id) {
+        return videoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
+    }
 }

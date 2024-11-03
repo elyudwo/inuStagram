@@ -23,13 +23,13 @@ public class LikeController {
     @GetMapping("/v1/get/likes")
     @Operation(summary = "동영상 좋아요 개수 조회", description = "쿼리 파라미터로 영상 식별자를 보내주세요.")
     public ResponseEntity<EachVideoLikes> getVideoLikes(UserEmail userEmail, @RequestParam Long videoId) {
-        return ResponseEntity.ok(videoLikeService.getVideoLike(userEmail.getEmail(), videoId));
+        return ResponseEntity.ok(videoLikeService.getVideoLikeByCache(userEmail.getEmail(), videoId));
     }
 
     @PostMapping("/v1/insert/like")
     @Operation(summary = "동영상 좋아요 추가", description = "JWT를 헤더에 삽입해주세요. 영상 식별자를 Json 형식으로 보내주세요")
     public ResponseEntity<Void> getVideoLikes(UserEmail userEmail, @RequestBody UpLikeReqDto reqDto) {
-        videoLikeService.plusLike(reqDto.getVideoId(), userEmail.getEmail());
+        videoLikeService.plusLike(reqDto, userEmail.getEmail());
         return ResponseEntity.ok().build();
     }
 
