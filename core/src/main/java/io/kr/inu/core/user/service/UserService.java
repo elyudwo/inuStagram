@@ -54,4 +54,9 @@ public class UserService {
 
         return user.plusTestLike();
     }
+
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new IllegalArgumentException("해당 이메일을 가진 사용자를 찾을 수 없습니다 토큰을 다시 확인해주세요: " + email));
+    }
 }
