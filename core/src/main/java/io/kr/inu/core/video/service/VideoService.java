@@ -1,6 +1,5 @@
 package io.kr.inu.core.video.service;
 
-import io.kr.inu.core.redis.HarmfulVideoReqDto;
 import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
@@ -8,6 +7,7 @@ import io.kr.inu.core.video.dto.FindVideoResponseDto;
 import io.kr.inu.core.video.dto.MakeVideoReqDto;
 import io.kr.inu.core.video.dto.UploadVideoReqDto;
 import io.kr.inu.core.video.repository.VideoRepository;
+import io.kr.inu.core.video.repository.VideoViewRepository;
 import io.kr.inu.infra.s3.S3Service;
 import io.kr.inu.infra.s3.VideoS3Repository;
 import io.kr.inu.infra.s3.MultipartDto;
@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -43,6 +42,8 @@ public class VideoService {
     private final VideoValidateService videoValidateService;
     private final UserValidateService userValidateService;
     private final S3Service s3Service;
+    private final VideoViewService videoViewService;
+    private final VideoViewRepository videoViewRepository;
     @Value("${ffmpeg.dir.ffmpeg}")
     private String ffmpeg;
     @Value("${ffmpeg.dir.ffprobe}")
@@ -53,11 +54,12 @@ public class VideoService {
         userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
-        String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
-
+//        String thumbnailUrl = videoS3Repository.saveVideoByStream(multipartDto.getOriginalFileName() + "thumbnail", extractThumbnail(video));
 //        videoValidateService.validateHarmVideo(new HarmfulVideoReqDto(videoEntity.getId(), video.getOriginalFilename()));
 //        videoValidateService.validateHarmVideo(video);
-        videoRepository.save(VideoEntity.of(videoUrl, thumbnailUrl, videoReqDto));
+        VideoEntity videoEntity = videoRepository.save(VideoEntity.of(videoUrl, "thumbnailUrl", videoReqDto));
+
+        videoViewService.createVideoView(videoEntity);
         return videoUrl;
     }
 
@@ -122,5 +124,9 @@ public class VideoService {
 
     public Map<String, String> getPresignedUrl(String prefix, String fileName) {
         return s3Service.getPresignedUrl(prefix, fileName);
+    }
+
+    public VideoEntity getVideoById(Long id) {
+        return videoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 식별자를 가진 비디오를 찾을 수 업습니다"));
     }
 }
