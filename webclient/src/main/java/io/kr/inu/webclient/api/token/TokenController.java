@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class TokenController {
 
-    private final TokenService tokenService;
+        private final TokenService tokenService;
 
-    @Operation(summary = "토큰 발급 API", description = "바디에 {email} json 형식으로 보내주시면 됩니다.")
-    @PostMapping("/v1/token/issue")
-    public ResponseEntity<TokenResponse> sendEmail(@Valid @RequestBody CertificationRequest request) {
-        return ResponseEntity.ok(tokenService.issueToken(request.toMailInfo()));
+        @Operation(summary = "토큰 발급 API", description = "바디에 {email} json 형식으로 보내주시면 됩니다.")
+        @PostMapping("/v1/token/issue")
+        public ResponseEntity<TokenResponse> sendEmail(@Valid @RequestBody CertificationRequest request) {
+            return ResponseEntity.ok(tokenService.issueToken(request.toMailInfo()));
     }
 }
