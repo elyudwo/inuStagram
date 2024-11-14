@@ -20,7 +20,7 @@ public class VideoViewCountScheduler {
     private final VideoViewService videoViewService;
     private final VideoViewDetailRepository videoViewDetailRepository;
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void executeDailyTask() {
         log.info("Daily task started at 00:00");
         performTask();

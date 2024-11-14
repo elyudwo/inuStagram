@@ -1,5 +1,6 @@
 package io.kr.inu.core.video.service;
 
+import io.kr.inu.core.common.ratelimiter.RateLimiter;
 import io.kr.inu.core.user.service.UserValidateService;
 import io.kr.inu.core.video.domain.VideoEntity;
 import io.kr.inu.core.video.dto.EachVideoData;
@@ -50,7 +51,8 @@ public class VideoService {
     private String ffprobe;
 
     @Transactional
-    public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto) throws IOException {
+    @RateLimiter(key = "#email", duration = 60)
+    public String uploadVideo(MultipartFile video, MakeVideoReqDto videoReqDto, String email) throws IOException {
         userValidateService.existUserByEmail(videoReqDto.getEmail());
         MultipartDto multipartDto = new MultipartDto(video.getOriginalFilename(), video.getSize(), video.getContentType(), video.getInputStream());
         String videoUrl = videoS3Repository.saveVideo(multipartDto);
@@ -64,6 +66,7 @@ public class VideoService {
     }
 
     @Transactional
+    @RateLimiter(key = "#email", duration = 60)
     public void uploadVideoUrl(String userEmail, UploadVideoReqDto dto) {
         userValidateService.existUserByEmail(userEmail);
         videoRepository.save(dto.convertDtoToEntity(userEmail));

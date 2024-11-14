@@ -26,7 +26,16 @@ public class VideoViewService {
 
     public void increaseVideoView(Long videoId) {
         String key = parsingRedisKey(videoId);
-        stringLongRedisTemplate.opsForValue().increment(key, 1);
+
+        long startTime = System.nanoTime();
+        for (int i = 0; i < 10_000; i++) {
+            stringLongRedisTemplate.opsForValue().increment(key, 1);
+        }
+
+        long endTime = System.nanoTime();
+        long durationInMillis = (endTime - startTime) / 1_000_000;
+
+        log.info("Execution time: " + durationInMillis + " ms");
     }
 
     private String parsingRedisKey(Long videoId) {

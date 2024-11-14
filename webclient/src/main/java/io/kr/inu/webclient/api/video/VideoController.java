@@ -32,7 +32,7 @@ public class VideoController {
     public String uploadVideo(UserEmail email, @RequestPart(name = "video") MultipartFile video, @RequestPart(name = "title") String title) throws IOException {
         MakeVideoReqDto videoReqDto = MakeVideoReqDto.of(title, email.getEmail());
 
-        return videoService.uploadVideo(video, videoReqDto);
+        return videoService.uploadVideo(video, videoReqDto, videoReqDto.getEmail());
     }
 
     @Operation(summary = "동영상 최신순 조회 기능", description = "JWT를 헤더에 보내주세요. 조회하려는 페이지와 동영상 개수를 입력해주세요.")
