@@ -1,6 +1,5 @@
 package io.kr.inu.core.common.ratelimiter;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -13,7 +12,6 @@ public class RateLimiterService {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
-
     private final DefaultRedisScript<Long> rateLimiterScript;
 
     public RateLimiterService() {

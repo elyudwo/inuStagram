@@ -1,15 +1,15 @@
 package io.kr.inu.core.common.ratelimiter;
 
 import io.kr.inu.infra.redis.common.CustomSpringELParser;
-import io.kr.inu.infra.redis.common.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.View;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Method;
 
@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 @Slf4j
 public class RateLimiterAspect {
     private final RateLimiterService rateLimiterService;
-    private final View error;
 
     @Around("@annotation(io.kr.inu.core.common.ratelimiter.RateLimiter)")
     public Object rateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -31,7 +30,7 @@ public class RateLimiterAspect {
 
         if (!rateLimiterService.isAllowed(key, duration)) {
             log.info("rate limiter alert! : {}", key);
-            throw new IllegalArgumentException("rate limiter alert!");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Rate limiter alert!");
         }
 
         return joinPoint.proceed();
